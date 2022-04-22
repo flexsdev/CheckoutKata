@@ -26,12 +26,19 @@ namespace CheckoutKata.ConsoleApp
                 if (string.IsNullOrEmpty(basket))
                     break;
 
-                checkout.Add(basket.ToUpper());
+                try
+                {
+                    checkout.Add(basket.ToUpper());
 
-                foreach (var item in checkout.Basket)
-                    Console.WriteLine($"{item.SKU}\t\t{item.UnitPrice.ToString("c")}");
+                    foreach (var item in checkout.Basket)
+                        Console.WriteLine($"{item.SKU}\t\t{item.UnitPrice.ToString("c")}");
 
-                Console.WriteLine("Total amount:\t" + checkout.TotalAmount.ToString("c"));
+                    Console.WriteLine("Total amount:\t" + checkout.TotalAmount.ToString("c"));
+                }
+                catch(System.Exception ex)
+                {
+                    Console.WriteLine("Error processing basket - " + ex.Message);
+                }
 
                 Console.WriteLine(new string('*', 22));
                 Console.WriteLine(string.Empty);

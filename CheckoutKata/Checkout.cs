@@ -28,8 +28,10 @@ namespace CheckoutKata
             {
                 var product = _products.FirstOrDefault(x => x.SKU == item);
 
-                if (product != null)
-                    _basket.Add(product);
+                if (product == null)
+                    throw new InvalidOperationException("Product not found");
+
+                _basket.Add(product);
             }
         }
 
