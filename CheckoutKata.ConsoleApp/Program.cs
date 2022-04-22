@@ -15,10 +15,16 @@ namespace CheckoutKata.ConsoleApp
                 new Product() { SKU = 'D', UnitPrice = 55 }
             };
 
-            while(1 == 1)
+            IEnumerable<Discount> _discounts = new[]
+            {
+                new Discount() {SKU = 'B', DiscountType = Interface.DiscountType.MultibuyPrice, QuantityForDiscount = 3, DiscountPriceForGroup = 40 },
+                new Discount() {SKU = 'D', DiscountType = Interface.DiscountType.MultibuyPercentage, QuantityForDiscount = 2, DiscountPercentagePerItem = 25 },
+            };
+
+            while (1 == 1)
             {
                 Console.WriteLine("Welcome to CheckoutKata Stores");
-                var checkout = new Checkout(products);
+                var checkout = new Checkout(products, _discounts);
 
                 Console.WriteLine("Enter contents of basket (ie: AAB) - or enter to exit");
                 var basket = Console.ReadLine();
