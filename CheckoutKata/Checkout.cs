@@ -10,12 +10,14 @@ namespace CheckoutKata
     public class Checkout : ICheckout
     {
         private readonly IEnumerable<Product> _products;
+        private readonly IEnumerable<Discount> _discounts;
 
         private List<Product> _basket;
 
-        public Checkout(IEnumerable<Product> products)
+        public Checkout(IEnumerable<Product> products, IEnumerable<Discount> discounts = null)
         {
             _products = products;
+            _discounts = discounts;
 
             _basket = new List<Product>();
         }
