@@ -39,7 +39,55 @@ namespace CheckoutKata
 
         public IEnumerable<IProduct> Basket => _basket;
 
-        public decimal TotalAmount => _basket.Sum(x => x.UnitPrice);
+        public decimal TotalAmount
+        {
+            get
+            {
+                var groupedItems = _basket.GroupBy(x => x.SKU).Select(x => new { SKU = x.Key, Quantity = x.Count() });
+                decimal total = 0;
+
+                foreach (var group in groupedItems)
+                {
+                    var item = _products.Single(x => x.SKU == group.SKU);
+                    var discount = _discounts.FirstOrDefault(x => x.SKU == group.SKU);
+
+                    if (discount != null)
+                    {
+                        if (discount.DiscountType == DiscountType.MultibuyPrice)
+                            total += GetMultibuy_FixedPrice(item.UnitPrice, group.Quantity, discount);
+                        else if (discount.DiscountType == DiscountType.MultibuyPercentage)
+                            total += GetMultibuy_PercentageDiscount(item.UnitPrice, group.Quantity, discount);
+                    }
+                    else
+                    {
+                        total += item.UnitPrice * group.Quantity;
+                    }
+                }
+
+                return total;
+            }
+        }
+
+        public decimal GetMultibuy_FixedPrice(decimal unitPrice, int quantity, IDiscount discount)
+        {
+            int multibuys = quantity / discount.QuantityForDiscount;
+            int remainder = quantity % discount.QuantityForDiscount;
+
+            var total = (multibuys * discount.DiscountPriceForGroup) + (unitPrice * remainder);
+
+            return total;
+        }
+
+        public decimal GetMultibuy_PercentageDiscount(decimal unitPrice, int quantity, IDiscount discount)
+        {
+            int remainder = quantity % discount.QuantityForDiscount;
+
+            var discountUnitPrice = (unitPrice / 100) * (100 - discount.DiscountPercentagePerItem);
+
+            var total = ((quantity - remainder) * discountUnitPrice) + (unitPrice * remainder);
+
+            return total;
+        }
 
     }
 }
