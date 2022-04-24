@@ -9,17 +9,17 @@ namespace CheckoutKata
 {
     public class Checkout : ICheckout
     {
-        private readonly IEnumerable<Product> _products;
-        private readonly IEnumerable<Discount> _discounts;
+        private readonly IEnumerable<IProduct> _products;
+        private readonly IEnumerable<IDiscount> _discounts;
 
-        private List<Product> _basket;
+        private List<IProduct> _basket;
 
-        public Checkout(IEnumerable<Product> products, IEnumerable<Discount> discounts = null)
+        public Checkout(IEnumerable<IProduct> products, IEnumerable<IDiscount> discounts = null)
         {
             _products = products;
             _discounts = discounts;
 
-            _basket = new List<Product>();
+            _basket = new List<IProduct>();
         }
 
         public void Add(string basket)
